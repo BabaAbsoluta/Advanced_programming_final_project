@@ -2,6 +2,9 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 # Download necessary NLTK data (only need to run these once)
 nltk.download('punkt', quiet=True)
