@@ -68,12 +68,16 @@ class MovieSearchApp:
         self.notebook.add(self.words_tab, text="Query Analysis")
 
         # Results text area
-        self.results_text = scrolledtext.ScrolledText(self.results_tab, wrap=tk.WORD)
+        self.results_text = scrolledtext.ScrolledText(self.results_tab, wrap=tk.WORD, font=("Segoe UI", 11))
         self.results_text.pack(fill=tk.BOTH, expand=True)
         self.results_text.config(state=tk.DISABLED)
 
+        # Configure tags for better font styling
+        self.results_text.tag_config("title", font=("Segoe UI", 14, "bold"))
+        self.results_text.tag_config("label", font=("Segoe UI", 11, "bold"))
+
         # Words text area
-        self.words_text = scrolledtext.ScrolledText(self.words_tab, wrap=tk.WORD)
+        self.words_text = scrolledtext.ScrolledText(self.words_tab, wrap=tk.WORD, font=("Segoe UI", 11))
         self.words_text.pack(fill=tk.BOTH, expand=True)
         self.words_text.config(state=tk.DISABLED)
 
@@ -122,10 +126,27 @@ class MovieSearchApp:
         if not top_matches:
             self.results_text.insert(tk.END, "No matches found.")
         else:
-            self.results_text.insert(tk.END, "Top matching movies:\n\n")
-            for i, (title, count, matched) in enumerate(top_matches):
-                self.results_text.insert(tk.END, f"{i + 1}. {title} - {count} matches\n")
-                self.results_text.insert(tk.END, f"   Matched words: {', '.join(matched)}\n\n")
+            self.results_text.insert(tk.END, "🎬 Top Matching Movies\n\n", "title")
+            for i, (row, count, matched) in enumerate(top_matches):
+                self.results_text.insert(tk.END, f"{'-'*60}\n")
+                self.results_text.insert(tk.END, f"{i + 1}. {row['Name']}\n", "title")
+                self.results_text.insert(tk.END, "Matched Words: ", "label")
+                self.results_text.insert(tk.END, f"{', '.join(matched)} ({count} match{'es' if count != 1 else ''})\n\n")
+
+                self.results_text.insert(tk.END, "🕒 Duration: ", "label")
+                self.results_text.insert(tk.END, f"{row.get('Duration', 'N/A')}\n")
+                self.results_text.insert(tk.END, "🎭 Genre: ", "label")
+                self.results_text.insert(tk.END, f"{row.get('Genre', 'N/A')}\n")
+                self.results_text.insert(tk.END, "⭐ IMDb Rating: ", "label")
+                self.results_text.insert(tk.END, f"{row.get('IMDb Rating', 'N/A')}\n")
+                self.results_text.insert(tk.END, "🎬 Director: ", "label")
+                self.results_text.insert(tk.END, f"{row.get('Director', 'N/A')}\n")
+                self.results_text.insert(tk.END, "🎞️ Stars: ", "label")
+                self.results_text.insert(tk.END, f"{row.get('Stars', 'N/A')}\n\n")
+                self.results_text.insert(tk.END, "🎞️ Plot: ", "label")
+                self.results_text.insert(tk.END, f"{row.get('Plot', 'N/A')}\n\n")
+
+                self.results_text.insert(tk.END, f"{'-'*60}\n\n")
 
         self.results_text.config(state=tk.DISABLED)
         self.status_var.set(f"Found {len(top_matches)} matching movies.")
